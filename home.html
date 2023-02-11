@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css"
+        integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500&family=Roboto:wght@400;600&display=swap');
+
+        * {
+            padding: 0;
+            margin: 0;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        body {
+            background: #f3f3ef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        html,
+        body {
+            font-size: 63.5%;
+            height: 100%;
+        }
+
+        html {
+            background: #eee;
+        }
+
+        .box {
+            width: 20vw !important;
+            height: 60vh !important;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.2rem 3rem rgba(0, 0, 0, 0.2);
+            background: #a5bbdd;
+            position: absolute;
+            overflow: hidden;
+            transform: translate3d(0, 0, 0);
+            min-width: 20rem;
+            min-height: 35rem;
+        }
+
+        .wave {
+            opacity: 0.3;
+            position: absolute;
+            top: 120%;
+            left: 50%;
+            background: white;
+            width: 50rem;
+            height: 50rem;
+            margin-left: -25rem;
+            margin-top: -25rem;
+            transform-origin: 50% 48%;
+            border-radius: 43%;
+            animation: drift 3000ms linear infinite;
+        }
+
+        .wave3 {
+            animation: drift 5000ms infinite linear;
+            opacity: 0.2;
+        }
+
+        .wave1 {
+            z-index: 999;
+        }
+
+        .wave2 {
+            animation: drift 7000ms infinite linear;
+            opacity: 0.1;
+        }
+
+        .box::after {
+            content: "";
+            display: block;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            transform: translate3d(0, 0, 0);
+        }
+
+        @keyframes rotates {
+            from {
+                transform: translateX(-0.5rem);
+            }
+
+            to {
+                transform: translateX(0.5rem);
+            }
+        }
+
+        .location {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-weight: 400;
+            font-size: 3rem;
+            color: black !important;
+        }
+
+        .fa-street-view {
+            animation: rotate 3s linear infinite alternate;
+        }
+
+
+        .date {
+            text-align: center;
+            margin-top: 0.5rem;
+            color: #57606f;
+            font-size: 1.2rem;
+            font-weight: 300;
+            text-transform: uppercase;
+        }
+
+        .temp {
+            margin-top: 2.5rem;
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 600;
+        }
+
+        .temp_min_max {
+            text-align: center;
+            margin-top: 0.3rem;
+            font-weight: 300;
+            font-size: 1.2rem;
+            color: #57606f;
+        }
+
+        .weatherIcon {
+            height: 55%;
+            display: flex;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .weatherIcon .fas {
+            margin-top: 10rem;
+            font-size: 6rem;
+            z-index: 999;
+            animation: fas-anime 3s linear infinite alternate;
+        }
+
+        .info {
+            margin-top: 15rem;
+            z-index: 1;
+        }
+
+        @keyframes drift {
+            from {
+                transform: rotate(0deg);
+            }
+
+            from {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fas-anime {
+            from {
+                transform: scale(1.1);
+            }
+
+            to {
+                transform: scale(1.8);
+            }
+        }
+
+        @media (min-width:600px) {
+            .box {
+                width: 90vw;
+                height: 80vh;
+            }
+
+            .wave {
+                top: 115%
+            }
+
+            .weatherIcon {
+                font-size: 5rem;
+            }
+
+            .info {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-heigth:500px) {
+            .box {
+                height: 80vh;
+            }
+
+            .wave {
+                top: 115%
+            }
+
+            body>span {
+                width: 100vw;
+                text-align: center;
+                color: gray;
+            }
+        }
+    </style>
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="box">
+        <div class="wave wave1"></div>
+        <div class="wave wave2"></div>
+        <div class="wave wave3"></div>
+        <div id="weatherIcon" class="weatherIcon"><i class="fas fa-sun" style="color:#eccc68"></i></div>
+    </div>
+    <div class="info">
+        <h2 class="location"><i class="fas fa-street-view" style="color:#fff"></i>{%location%} , {%country%}</h2>
+        <p id="date" class="date">WED | FEB 10 |10:09 PM</p>
+        <h1 class="temp">{%tempVal%}&deg;C</h1>
+        <h3 class="temp_min_max">Min {%tempMin%}&deg;C | Max {%tempMax%}&deg;C </h3>
+    </div>
+
+</body>
+<script>
+    const currDate = document.getElementById("date")
+    let weatherIcon = document.getElementById("weatherIcon")
+
+    const tempStatus = "{%tempStatus%}"
+    if (tempStatus == 'Sunny') {
+        weatherIcon.innerHTML = "<i class='fas fa-sun' style='color:#eccc68'>"
+    }
+    else if (tempStatus == 'Cloud') {
+        weatherIcon.innerHTML = "<i class='fas fa-cloud' style='color:#dfe4ea'>"
+    }
+    else if (tempStatus == 'Rainy') {
+        weatherIcon.innerHTML = "<i class='fas fa-cloud-rain' style='color:#a4b0be'>"
+    }
+    else {
+        weatherIcon.innerHTML = "<i class='fas fa-cloud' style='color:#ebf0fa'>"
+    }
+    const getCurrentDay = () => {
+        var weekday = new Array(7);
+        weekday[0] = "Sunday";
+        weekday[1] = "Monday";
+        weekday[2] = "Tuesday";
+        weekday[3] = "Wedday";
+        weekday[4] = "Thursday";
+        weekday[5] = "Friday";
+        weekday[6] = "Saturday";
+        let currentTime = new Date()
+        let day = weekday[currentTime.getDay()]
+
+        return day
+    }
+
+    const getCurrentTime = () => {
+        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        var now = new Date();
+        var month = months[now.getMonth()];
+        var date = now.getDate();
+
+        let hours = now.getHours()
+        let min = now.getMinutes()
+        let period = 'AM'
+        if (hours > 11) {
+            period = 'PM';
+            if (hours < 12) hours -= 12;
+        }
+        if (min < 10) min = "0" + min
+        var day = now.getDay();
+        return `${month} | ${date} | ${hours} : ${min} ${period}`
+    }
+
+    currDate.innerHTML = `${getCurrentDay()} |  ${getCurrentTime()}`
+
+
+</script>
+
+</html>
